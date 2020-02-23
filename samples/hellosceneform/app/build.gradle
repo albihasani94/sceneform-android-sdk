@@ -20,7 +20,7 @@ android {
         applicationId "com.google.ar.sceneform.samples.hellosceneform"
 
         // Sceneform requires minSdkVersion >= 24.
-        minSdkVersion 24
+        minSdkVersion 28
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -60,3 +60,9 @@ sceneform.asset('sampledata/models/andy.obj',
         'sampledata/models/andy.sfa',
         'src/main/res/raw/andy')
 
+
+
+sceneform.asset('sampledata/models/scene.gltf',
+        'default',
+        'sampledata/models/scene.sfa',
+        'src/main/assets/scene')
