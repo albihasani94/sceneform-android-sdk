@@ -51,6 +51,9 @@ dependencies {
     //implementation "com.google.ar.sceneform:core:1.15.0"
 
     implementation "com.android.support:appcompat-v7:28.0.0"
+
+    // Load the assets on runtime
+    //implementation 'com.google.ar.sceneform:assets:1.15.0'
 }
 
 apply plugin: 'com.google.ar.sceneform.plugin'

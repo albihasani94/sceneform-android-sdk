@@ -139,7 +139,7 @@
     file: 'sampledata/models/scene.gltf',
     name: 'scene',
     recenter: 'root',
-    scale: 0.67977799999999999,
+    scale: 0.2,
   },
   samplers: [
     {
