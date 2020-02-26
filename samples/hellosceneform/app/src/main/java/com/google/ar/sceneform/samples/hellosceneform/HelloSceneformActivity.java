@@ -34,6 +34,7 @@ import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.Color;
+import com.google.ar.sceneform.rendering.Light;
 import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ShapeFactory;
@@ -101,6 +102,11 @@ public class HelloSceneformActivity extends AppCompatActivity {
                 .thenAccept(renderable -> yodaRenderable = renderable);
 
 
+        Light spotlight = Light.builder(Light.Type.FOCUSED_SPOTLIGHT)
+                .setColor(new Color(android.graphics.Color.YELLOW))
+                .setShadowCastingEnabled(true)
+                .build();
+
         arFragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
                     if (yodaRenderable == null) {
@@ -111,13 +117,16 @@ public class HelloSceneformActivity extends AppCompatActivity {
                     Anchor anchor = hitResult.createAnchor();
                     AnchorNode anchorNode = new AnchorNode(anchor);
                     anchorNode.setParent(arFragment.getArSceneView().getScene());
+                    anchorNode.setLight(spotlight);
 
                     // Create the transformable andy and add it to the anchor.
                     TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
                     andy.setParent(anchorNode);
                     andy.setRenderable(yodaRenderable);
+                    andy.setLight(spotlight);
                     andy.select();
                 });
+
 
     }
 
