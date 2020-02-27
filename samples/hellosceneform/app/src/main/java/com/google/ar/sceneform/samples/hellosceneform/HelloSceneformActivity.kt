@@ -4,8 +4,6 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.net.Uri
-import android.os.Build
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -30,8 +28,6 @@ class HelloSceneformActivity : AppCompatActivity() {
     private var redSphereRenderable: ModelRenderable? = null
     private var yodaRenderable: ModelRenderable? = null
 
-    // CompletableFuture requires api level 24
-    // FutureReturnValueIgnored is not valid
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!checkIsSupportedDeviceOrFinish(this)) {
@@ -45,17 +41,19 @@ class HelloSceneformActivity : AppCompatActivity() {
                 .setSource(this, R.raw.andy)
                 .build()
                 .thenAccept { renderable: ModelRenderable? -> andyRenderable = renderable }
-                .exceptionally { throwable: Throwable? ->
+                .exceptionally {
                     val toast = Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG)
                     toast.setGravity(Gravity.CENTER, 0, 0)
                     toast.show()
                     null
                 }
+
         // Demo view renderable
         ViewRenderable.builder()
                 .setView(this, R.layout.test_view)
                 .build()
                 .thenAccept { renderable: ViewRenderable? -> testViewRenderable = renderable }
+
         // Make a shape from a factory
         MaterialFactory.makeOpaqueWithColor(this, Color(android.graphics.Color.RED))
                 .thenAccept { material: Material? -> redSphereRenderable = ShapeFactory.makeSphere(0.1f, Vector3(0.0f, 0.15f, 0.0f), material) }
@@ -63,11 +61,13 @@ class HelloSceneformActivity : AppCompatActivity() {
                 .setSource(this, Uri.parse("scene.sfb"))
                 .build()
                 .thenAccept { renderable: ModelRenderable? -> yodaRenderable = renderable }
+
         val spotlight = Light.builder(Light.Type.FOCUSED_SPOTLIGHT)
                 .setColor(Color(android.graphics.Color.YELLOW))
                 .setShadowCastingEnabled(true)
                 .build()
-        arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
+
+        arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, _: Plane?, _: MotionEvent? ->
             if (yodaRenderable == null) {
                 return@setOnTapArPlaneListener
             }
@@ -95,13 +95,7 @@ class HelloSceneformActivity : AppCompatActivity() {
      *
      * Finishes the activity if Sceneform can not run
      */
-    fun checkIsSupportedDeviceOrFinish(activity: Activity): Boolean {
-        if (Build.VERSION.SDK_INT < VERSION_CODES.N) {
-            Log.e(TAG, "Sceneform requires Android N or later")
-            Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show()
-            activity.finish()
-            return false
-        }
+    private fun checkIsSupportedDeviceOrFinish(activity: Activity): Boolean {
         val openGlVersionString = (activity.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
                 .deviceConfigurationInfo
                 .glEsVersion
